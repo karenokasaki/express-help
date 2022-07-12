@@ -1,0 +1,22 @@
+{
+	"name": "help-express",
+	"version": "1.0.0",
+	"description": "help com os meus aluninhos preferidos",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"dev": "nodemon .",
+		"start": "node ."
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"dotenv": "^16.0.1",
+		"express": "^4.18.1",
+		"mongoose": "^6.4.4"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.19"
+	}
+}
