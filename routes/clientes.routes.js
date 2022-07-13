@@ -31,7 +31,7 @@ router.get('/:id', async (req, res) => {
 
         const { id } = req.params
 
-        const cliente = await ClienteModel.findById(id)
+        const cliente = await ClienteModel.findById(id).populate('pizzas')
 
         return res.status(200).json(cliente)
 
