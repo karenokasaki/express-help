@@ -1,41 +1,60 @@
 const express = require('express')
 const router = express.Router()
 
-let allPizzas = require("../allPizzas")
+const PizzaModel = require('../models/Pizza.model')
+const ClienteModel = require('../models/Clientes.model')
 
-router.get('/todas-pizzas', (req, res) => {
+router.get('/todas-pizzas', async (req, res) => {
 
+    const todasPizzas = await PizzaModel.find()
 
-    return res.status(200).json(allPizzas)
+    return res.status(200).json(todasPizzas)
 })
 
 
-router.post('/criar-pizza', (req, res) => {
+router.post('/criar-pizza/:idCliente', async (req, res) => {
 
-    allPizzas.push(req.body)
+    const { idCliente } = req.params
 
-    return res.status(201).json(allPizzas)
-})
-
-router.delete('/deletar-pizza/:sabor', (req, res) => {
-
-    const { sabor } = req.params
-
-    allPizzas = allPizzas.filter((pizza) => pizza.sabor !== sabor) 
-
-    return res.status(200).json(allPizzas)
-})
-
-router.put('/editar-pizza/:sabor', (req, res) => {
-    const { sabor } = req.params
-
-    allPizzas.forEach((pizza, i) => {
-        if (pizza.sabor === sabor) {
-            allPizzas[i] = { ...req.body }
+    const novaPizza = await PizzaModel.create(
+        {
+            ...req.body,
+            cliente: idCliente
         }
-    })
+    )
 
-    return res.status(200).json(allPizzas)
+    await ClienteModel.findByIdAndUpdate(
+        idCliente,
+        { $push: { pizzas: novaPizza._id } }
+    )
+
+    return res.status(201).json(novaPizza)
+})
+
+router.delete('/deletar-pizza/:id', async (req, res) => {
+
+    const { id } = req.params
+
+    const pizzaDeletada = await PizzaModel.findByIdAndDelete(id)
+
+    await ClienteModel.findByIdAndUpdate(
+        pizzaDeletada.cliente,
+        { $pull: { pizzas: pizzaDeletada._id } }
+    )
+
+    return res.status(200).json(pizzaDeletada)
+})
+
+router.put('/editar-pizza/:id', async (req, res) => {
+    const { id } = req.params
+
+    const pizzaEditada = await PizzaModel.findByIdAndUpdate(
+        id,
+        { ...req.body },
+        { new: true }
+    )
+
+    return res.status(200).json(pizzaEditada)
 })
 
 

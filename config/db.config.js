@@ -4,8 +4,8 @@ async function connect() {
     try {
         //essa é a função qque vai se conectar com o seu banco de dados
         const dbConnection = await mongoose.connect(
-            "mongodb://localhost:27017/pizzaria" //é a unica linha que importa
-            )
+            process.env.MONGODB_URI //é a unica linha que importa
+        )
         console.log("Conectado ao banco de dados:", dbConnection.connection.name)
     } catch (error) {
         console.log(error)
