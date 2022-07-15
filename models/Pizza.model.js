@@ -6,7 +6,10 @@ const pizzaSchema = new Schema({
     sabor: {
         type: String, required: true,
     },
-    valor: {
+    valorUnitario: {
+        type: Number, min: 0
+    },
+    valorTotal: {
         type: Number, min: 0
     },
     ingredientes: {
